@@ -1,33 +1,33 @@
-# Site Auditor — auditoria de segurança web com relatório PDF
+# Site Auditor — web security audit with a PDF report
 
-Analisa um site em segundos e gera um **relatório PDF para o cliente**: classificação (A–F), problemas por gravidade e **como corrigir cada um**.
+Analyzes a website in seconds and generates a **client-ready PDF report**: grade (A–F), issues by severity and **how to fix each one**.
 
-**Problema que resolve:** pequenas empresas raramente sabem se o site tem HTTPS bem configurado, certificados a expirar ou cookies inseguros. Este relatório é entregável e vendável como serviço.
+**Problem it solves:** small businesses rarely know whether their site has HTTPS configured properly, expiring certificates or insecure cookies. This report is deliverable and can be sold as a service.
 
-## O que verifica
-| Área | Verificações |
+## What it checks
+| Area | Checks |
 |---|---|
-| TLS | Certificado válido e confiável, validade (aviso < 30 dias), versão do protocolo, cifra fraca |
-| Headers | HSTS, CSP (e diretivas inseguras), clickjacking, `nosniff`, Referrer-Policy, Permissions-Policy, versões de software expostas |
+| TLS | Valid and trusted certificate, validity (warning < 30 days), protocol version, weak cipher |
+| Headers | HSTS, CSP (and unsafe directives), clickjacking, `nosniff`, Referrer-Policy, Permissions-Policy, exposed software versions |
 | Cookies | `Secure`, `HttpOnly`, `SameSite` |
-| Rede | Redirecionamento HTTP → HTTPS |
+| Network | HTTP → HTTPS redirect |
 
-Exemplo: [`examples/relatorio-exemplo.pdf`](examples/relatorio-exemplo.pdf).
+Example: [`examples/relatorio-exemplo.pdf`](examples/relatorio-exemplo.pdf).
 
-## Utilização
+## Usage
 ```bash
 pip install -r requirements.txt
 cd src
-python -m siteaudit https://exemplo.com --yes -o relatorio.pdf
+python -m siteaudit https://example.com --yes -o report.pdf
 ```
-`--yes` confirma que tem autorização para auditar o site. O código de saída é 0 para A/B e 1 para pior (útil em CI).
+`--yes` confirms that you are authorized to audit the site. The exit code is 0 for A/B and 1 for worse (useful in CI).
 
-## Arquitetura
-`checks.py` (regras puras, sem rede) · `fetch.py` (único módulo com I/O) · `report.py` (PDF com ReportLab) · `cli.py`. As regras são testadas sem rede.
+## Architecture
+`checks.py` (pure rules, no network) · `fetch.py` (the only module with I/O) · `report.py` (PDF with ReportLab) · `cli.py`. The rules are tested without network access.
 
 ```bash
 python -m pytest tests
 ```
 
-## Limitações
-Analisa só a página inicial, sem seguir redirects nem rastrear o site; não deteta vulnerabilidades da aplicação (XSS, SQLi) e não substitui um teste de intrusão. Só audite sites seus ou com autorização.
+## Limitations
+It only analyzes the home page, without following redirects or crawling the site; it does not detect application vulnerabilities (XSS, SQLi) and is not a substitute for a penetration test. Only audit your own sites or sites you are authorized to audit.
